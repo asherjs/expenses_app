@@ -47,8 +47,6 @@ class ExpensesModel extends Model {
     future.then((_) {
       Load();
     });
-    //_items.removeAt(index);
-    //notifyListeners();
   }
 
   void addExpense(String name, double price, DateTime date) {
