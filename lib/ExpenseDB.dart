@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:expensesapp/Expense.dart';
+import 'package:expensesapp/MonthExpenses.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -30,16 +30,22 @@ class ExpenseDB {
     );
   }
 
+  Future<List<MonthExpenses>> getAllMonthExpenses() async {
+    Database db = await database;
+    List<Map> query = await db.rawQuery("SELECT id, SUM(price) as \"month-expenses\", strftime(\"%Y-%m\", date) as \"date\" FROM Expenses GROUP BY strftime(\"%Y-%m\", date) ORDER BY date DESC");
+    var result = List<MonthExpenses>();
+    query.forEach((r) {
+      result.add(MonthExpenses(r["id"], r["date"], r["month-expenses"]));
+    });
+    return result;
+  }
+
   Future<List<Expense>> getAllExpenses() async {
     Database db = await database;
     List<Map> query = await db.rawQuery("SELECT * FROM Expenses ORDER BY date DESC");
     var result = List<Expense>();
     query.forEach((r) => {
-      if (r["date"] != "null" && r["date"] != null) {
-        result.add(Expense(r["id"], DateTime.parse(r["date"]), r["name"], r["price"]))
-      } else {
-        result.add(Expense(r["id"], DateTime(0), r["name"], r["price"]))
-      }
+      result.add(Expense(r["id"], DateTime.parse(r["date"]), r["name"], r["price"]))
     });
     return result;
   }
@@ -51,14 +57,15 @@ class ExpenseDB {
 
   Future<void> addExpense(String name, double price, DateTime dateTime) async {
     Database db = await database;
-    var dateAsString = dateTime.toString();
-    await db.rawInsert("INSERT INTO Expenses (name, date, price) VALUES (\"$name\",\"$dateAsString\", $price)");
+    String stringDateTime = dateTime.toString();
+    await db.rawInsert("INSERT INTO Expenses (name, date, price) VALUES (\"$name\",\"$stringDateTime\", $price)");
   }
 
   Future<void> getTable() async {
   await _database.close();
-    Directory documentsDir = await getApplicationDocumentsDirectory();
-    var path = join(documentsDir.path, "db.db");
-      await deleteDatabase(path);
+  Directory documentsDir = await getApplicationDocumentsDirectory();
+  var path = join(documentsDir.path, "db.db");
+  await deleteDatabase(path);
   }
+
 }

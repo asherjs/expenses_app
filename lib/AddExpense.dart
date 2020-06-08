@@ -1,16 +1,20 @@
 import 'package:expensesapp/ExpensesModel.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class _AddExpenseState extends State<AddExpense> {
+  static var _format = DateFormat('yyyy-MM-dd');
+  static DateTime _now = DateTime.now();
   double _price;
   String _name;
-  DateTime _date = DateTime.now();
+  DateTime _date = _now;
   ExpensesModel _model;
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   _AddExpenseState(this._model);
 
-  final _controller = TextEditingController(text: DateTime.now().toString());
+  final _controller = TextEditingController(text: _format.format(_now));
 
   Future<DateTime> _selectDate() async {
     DateTime picked = await showDatePicker(
@@ -79,7 +83,8 @@ class _AddExpenseState extends State<AddExpense> {
                   FocusScope.of(context).requestFocus(new FocusNode());
                   DateTime picked = await _selectDate();
                   if (picked != null) {
-                    _controller.text = picked.toString();
+                    String formattedPick = _format.format(picked);
+                    _controller.text = formattedPick;
                     _date = picked;
                   }
                 }
