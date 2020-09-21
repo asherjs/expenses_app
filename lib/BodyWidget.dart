@@ -1,3 +1,4 @@
+import 'package:expensesapp/EditExpenses.dart';
 import 'package:expensesapp/ExpensesModel.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -44,10 +45,6 @@ class BodyWidgetState extends State<BodyWidget>  {
                       if (index == 0) {
                         return ListTile(
                           title: Text("Total Expenses: " + model.GetTotalExpenses().toString()),
-                          onTap: () {
-                            //model.getTable();
-                            //model.GetMonthsExpenses();
-                          },
                         );
                       } else {
                         index -= 1;
@@ -56,7 +53,6 @@ class BodyWidgetState extends State<BodyWidget>  {
                     },
                     separatorBuilder: (context, index) => Divider(),
                     itemCount: selectedWidgetMarker == WidgetMarker.day ? model.dayRecordsCount + 1 : model.monthRecordsCount + 1,
-                    //model.dayRecordsCount + 1,
                   )
               ),
             ),
@@ -89,7 +85,12 @@ class BodyWidgetState extends State<BodyWidget>  {
             leading: Icon(Icons.attach_money),
             trailing: Icon(Icons.delete),
             onLongPress: () {
-
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditExpenses(model, index)
+                  )
+              );
             },
           ),
           confirmDismiss: (direction) async {

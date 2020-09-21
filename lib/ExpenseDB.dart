@@ -55,17 +55,20 @@ class ExpenseDB {
     await db.rawDelete("DELETE FROM Expenses WHERE id = $index");
   }
 
-  Future<void> addExpense(String name, double price, DateTime dateTime) async {
+//  Future<void> addExpense(String name, double price, DateTime dateTime) async {
+//    Database db = await database;
+//    String stringDateTime = dateTime.toString();
+//
+//  }
+
+  Future<void> editExpenses(String name, double price, DateTime dateTime, [int index]) async {
     Database db = await database;
     String stringDateTime = dateTime.toString();
-    await db.rawInsert("INSERT INTO Expenses (name, date, price) VALUES (\"$name\",\"$stringDateTime\", $price)");
-  }
-
-  Future<void> getTable() async {
-  await _database.close();
-  Directory documentsDir = await getApplicationDocumentsDirectory();
-  var path = join(documentsDir.path, "db.db");
-  await deleteDatabase(path);
+    if (index == null) {
+      await db.rawInsert("INSERT INTO Expenses (name, date, price) VALUES (\"$name\",\"$stringDateTime\", $price)");
+    } else {
+      await db.rawInsert("UPDATE Expenses SET name=\"$name\", date=\"$stringDateTime\", price=$price WHERE id=$index");
+    }
   }
 
 }

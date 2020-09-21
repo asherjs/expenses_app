@@ -1,12 +1,11 @@
-import 'package:expensesapp/AddExpense.dart';
 import 'package:expensesapp/BodyWidget.dart';
+import 'package:expensesapp/EditExpenses.dart';
 import 'package:expensesapp/ExpensesModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 void main() {
-  //"YYYY-MM-DD HH:MM:SS.SSS"
   //initializeDateFormatting('ru_RU', null).then((_) => runApp(MyApp()));
   runApp(MyApp());
 }
@@ -48,7 +47,7 @@ class MyHomePage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return AddExpense(model);
+                    return EditExpenses(model);
                   }
                 )
               );
